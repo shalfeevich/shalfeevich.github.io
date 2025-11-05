@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Сделки менеджера - amoCRM Виджет</title>
+		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:400,300&subset=latin,cyrillic-ext">
+		<link rel="stylesheet" type="text/css" href='//fonts.googleapis.com/css?family=PT+Sans:400,700&subset=latin,cyrillic-ext'>
+
+		<style type="text/css">
+		* {
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			text-rendering: geometricPrecision;
+			-webkit-font-smoothing: antialiased;
+		}
+		html, body {
+			padding: 0;
+			margin: 0;
+			font-family: 'PT Sans';
+			color: #2E3640;
+		}
+		a, a:active, a:hover, a:visited {
+			color: #2E3640;
+			text-decoration: none;
+		}
+		.cell-wrapper {
+			padding: 20px 15px 15px 15px;
+		}
+		.cell-wrapper__caption {
+			font-size: 15px;
+			font-weight: bold;
+		}
+		.cell-wrapper__data {
+			height: 50px;
+		}
+		.cell-wrapper__data__num {
+			font-size: 40px;
+			line-height: 68px;
+			font-family: 'Open Sans', sans-serif;
+		}
+		.cell-wrapper__bottom {
+			margin-top: 15px;
+			font-size: 18px;
+			font-family: 'Open Sans', sans-serif;
+		}
+		.cell-wrapper__bottom.red,
+		.cell-wrapper__bottom.red a {
+			color: #fe6e6e;
+		}
+		.cell-wrapper__bottom.green,
+		.cell-wrapper__bottom.green a {
+			color: #41cfc4;
+		}
+		.cell-wrapper__bottom:after {
+			content: "";
+			display: inline-block;
+			width: 10px;
+			height: 14px;
+			vertical-align: middle;
+			margin-top: -4px;
+			margin-left: 3px;
+		}
+		.cell-wrapper__bottom.green:after {
+			background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWlkWU1pZCIgd2lkdGg9IjgiIGhlaWdodD0iMTMiIHZpZXdCb3g9IjAgMCA4IDEzIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KCiAgICAgIC5jbHMtMiB7CiAgICAgICAgZmlsbDogIzM4Y2RjMTsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPHBhdGggZD0iTTguNTAyLDQuMjc5IEM4LjUwMiw0LjI3OSA3LjYwNiw1LjIwNyA3LjYwNiw1LjIwNyBDNy42MDYsNS4yMDcgNS4wMDcsMi41MTYgNS4wMDcsMi41MTYgQzUuMDA3LDIuNTE2IDUuMDA3LDEzLjAyNiA1LjAwNywxMy4wMjYgQzUuMDA3LDEzLjAyNiAzLjQ5MywxMy4wMjYgMy40OTMsMTMyLjAyNiBDMy40OTMsMTMuMDI2IDMuNDkzLDIuNTE2IDMuNDkzLDIuNTE2IEMzLjQ5MywyLjUxNiAwLjg5NCw1LjIwNyAwLjg5NCw1LjIwNyBDMC44OTQsNS4yMDcgLTAuMDAyLDQuMjc5IC0wLjAwMiw0LjI3OSBDLTAuMDAyLDQuMjc5IDQuMTE5LDAuMDEyIDQuMTE5LDAuMDEyIEM0LjExOSwwLjAxMiA0LjI1MCwwLjE0OCA0LjI1MCwwLjE0OCBDNC4yNTAsMC4xNDggNC4zODEsMC4wMTIgNC4zODEsMC4wMTIgQzQuMzgxLDAuMDEyIDguNTAyLDQuMjc5IDguNTAyLDQuMjc5IFoiIGlkPSJwYXRoLTEiIGNsYXNzPSJjbHMtMiIgZmlsbC1ydWxlPSJldmVub2RkIi8+Cjwvc3ZnPgo=) no-repeat center center;
+		}
+		.cell-wrapper__bottom.red:after {
+			background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWlkWU1pZCIgd2lkdGg9IjkiIGhlaWdodD0iMTMiIHZpZXdCb3g9IjAgMCA5IDEzIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KCiAgICAgIC5jbHMtMiB7CiAgICAgICAgZmlsbDogI2ZlNmU2ZTsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPHBhdGggZD0iTTguNTAyLDguNzM1IEM4LjUwMiw4LjczNSA0LjM4MSwxMy4wMDIgNC4zODEsMTMuMDAyIEM0LjM4MSwxMy4wMDIgNC4yNTAsMTIuODY2IDQuMjUwLDEyLjg2NiBDNC4yNTAsMTIuODY2IDQuMTE5LDEzLjAwMiA0LjExOSwxMy4wMDIgQzQuMTE5LDEzLjAwMiAtMC4wMDIsOC43MzUgLTAuMDAyLDguNzM1IEMtMC4wMDIsOC43MzUgMC44OTQsNy44MDcgMC44OTQsNy44MDcgQzAuODk0LDcuODA3IDMuNDkzLDEwLjQ5OCAzLjQ5MywxMC40OTggQzMuNDkzLDEwLjQ5OCAzLjQ5MywtMC4wMTIgMy40OTMsLTAuMDEyIEMzLjQ5MywtMC4wMTIgNS4wMDcsLTAuMDEyIDUuMDA3LC0wLjAxMiBDNS4wMDcsLTAuMDEyIDUuMDA3LDEwLjQ5OCA1LjAwNywxMC40OTggQzUuMDA3LDEwLjQ5OCA3LjYwNiw3LjgwNyA3LjYwNiw3LjgwNyBDNy42MDYsNy44MDcgOC41MDIsOC43MzUgOC41MDIsOC43MzUgWiIgaWQ9InBhdGgtMSIgY2xhc3M9ImNscy0yIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KPC9zdmc+Cg==) no-repeat center center;
+		}
+
+		.cell-wrapper__caption,
+		.cell-wrapper__data,
+		.cell-wrapper__bottom {
+		    position: relative;
+		    white-space: nowrap;
+		    overflow: hidden;
+		    width: 100%;
+		}
+		.cell-wrapper__caption:before,
+		.cell-wrapper__data:before,
+		.cell-wrapper__bottom:before {
+		    content: "";
+		    position: absolute;
+		    top: 0;
+		    bottom: 0;
+		    right: -1px;
+		    width: 20px;
+
+		    background: -moz-linear-gradient(left,  rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 35%, rgba(255,255,255,0.92) 45%, rgba(255,255,255,1) 100%); /* FF3.6+ */
+		    background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(255,255,255,0)), color-stop(35%,rgba(255,255,255,0.9)), color-stop(45%,rgba(255,255,255,0.92)), color-stop(100%,rgba(255,255,255,1))); /* Chrome,Safari4+ */
+		    background: -webkit-linear-gradient(left,  rgba(255,255,255,0) 0%,rgba(255,255,255,0.9) 35%,rgba(255,255,255,0.92) 45%,rgba(255,255,255,1) 100%); /* Chrome10+,Safari5.1+ */
+		    background: -o-linear-gradient(left,  rgba(255,255,255,0) 0%,rgba(255,255,255,0.9) 35%,rgba(255,255,255,0.92) 45%,rgba(255,255,255,1) 100%); /* Opera 11.10+ */
+		    background: -ms-linear-gradient(left,  rgba(255,255,255,0) 0%,rgba(255,255,255,0.9) 35%,rgba(255,255,255,0.92) 45%,rgba(255,255,255,1) 100%); /* IE10+ */
+		    background: linear-gradient(to right,  rgba(255,255,255,0) 0%,rgba(255,255,255,0.9) 35%,rgba(255,255,255,0.92) 45%,rgba(255,255,255,1) 100%); /* W3C */
+		    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */
+		}
+
+		/* Дополнительные стили для нашего виджета */
+		.widget-period {
+			font-size: 12px;
+			color: #666;
+			margin-top: 5px;
+		}
+		</style>
+
+		<script>
+		// Получение периода из URL параметров
+		function getAmocrmPeriod() {
+			const urlParams = new URLSearchParams(window.location.search);
+			return urlParams.get('amocrm_period') || 'day';
+		}
+
+		// Данные для виджета (в реальности из API)
+		const widgetData = {
+			day: { leads: 8, amount: 356000, change: +12 },
+			week: { leads: 42, amount: 1890000, change: +8 },
+			month: { leads: 156, amount: 7450000, change: +15 }
+		};
+
+		// Обновление виджета
+		function updateWidget() {
+			const period = getAmocrmPeriod();
+			const data = widgetData[period];
+			
+			document.getElementById('widgetCaption').innerHTML = `Сделки менеджера <div class="widget-period">(${getPeriodText(period)})</div>`;
+			document.getElementById('widgetNumber').innerHTML = data.leads;
+			document.getElementById('widgetBottom').innerHTML = `${data.change > 0 ? '+' : ''}${data.change}%`;
+			
+			// Устанавливаем цвет в зависимости от изменения
+			const bottomElement = document.getElementById('widgetBottom');
+			bottomElement.className = data.change >= 0 ? 'cell-wrapper__bottom green' : 'cell-wrapper__bottom red';
+		}
+
+		// Текст для периода
+		function getPeriodText(period) {
+			const periods = {
+				day: 'сегодня',
+				week: 'за неделю', 
+				month: 'за месяц'
+			};
+			return periods[period] || period;
+		}
+
+		// Имитация работы с API amoCRM
+		function demonstrateAPIIntegration() {
+			console.log('🎯 ВИДЖЕТ ПО ГАЙДЛАЙНУ AMOCRM');
+			console.log('📊 Фильтр: Кем создан → Менеджер');
+			console.log('📅 Период:', getAmocrmPeriod());
+			console.log('🔗 URL параметр: amocrm_period=' + getAmocrmPeriod());
+		}
+
+		// Инициализация при загрузке
+		document.addEventListener('DOMContentLoaded', function() {
+			updateWidget();
+			demonstrateAPIIntegration();
+			
+			console.log('✅ Виджет инициализирован по гайдлайну amoCRM');
+		});
+		</script>
+	</head>
+	<body>
+		<div class="cell-wrapper">
+			<!-- Название виджета -->
+			<div class="cell-wrapper__caption" id="widgetCaption">Сделки менеджера</div>
+
+			<!-- Главная цифра в виджете -->
+			<div class="cell-wrapper__data">
+				<div class="cell-wrapper__data__num" title="8" id="widgetNumber">8</div>
+			</div>
+
+			<!-- Футер виджета - изменение за период -->
+			<div class="cell-wrapper__bottom green" title="+12%" id="widgetBottom">
+				+12%
+			</div>
+		</div>
+
+		<script>
+		// API для взаимодействия с виджетом
+		window.amoManagerWidget = {
+			// Получить текущие данные
+			getData: function() {
+				const period = getAmocrmPeriod();
+				return {
+					period: period,
+					periodText: getPeriodText(period),
+					...widgetData[period],
+					filter: 'created_by=13180626' // Фильтр "Кем создан = Менеджер"
+				};
+			},
+
+			// Обновить виджет
+			refresh: function() {
+				updateWidget();
+				return 'Виджет обновлен для периода: ' + getAmocrmPeriod();
+			},
+
+			// Показать информацию о фильтре
+			getFilterInfo: function() {
+				return {
+					field: 'created_by',
+					value: 13180626,
+					description: 'Кем создан → Менеджер',
+					api_url: '/api/v4/leads?filter[created_by]=13180626&with=contacts'
+				};
+			}
+		};
+
+		// Демонстрация работы виджета
+		console.log('🚀 Виджет готов к работе!');
+		console.log('Доступные методы:');
+		console.log('- amoManagerWidget.getData()');
+		console.log('- amoManagerWidget.refresh()'); 
+		console.log('- amoManagerWidget.getFilterInfo()');
+		</script>
+	</body>
+</html>
